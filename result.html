@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Results{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <h1>Prediction Results</h1>
+    <p class="result-subtitle">Image: {{ result.image }}</p>
+
+    <!-- Final Call Banner -->
+    <div class="final-call {% if result.models_agree %}agree{% else %}disagree{% endif %}">
+        <div class="final-call-content">
+            {% if result.models_agree %}
+                <div class="final-result">
+                    <span class="final-label">Final Diagnosis</span>
+                    <span class="final-value">{{ result.static_prediction }}</span>
+                    <span class="final-confidence">
+                        Confidence: {{ (result.static_confidence[result.static_prediction] * 100)|round(1) }}%
+                    </span>
+                    <span class="final-agreement">✅ Both models agree</span>
+                </div>
+            {% else %}
+                <div class="final-result disagree">
+                    <span class="final-label">⚠️ Models Disagree</span>
+                    <div class="disagreement-boxes">
+                        <div class="model-result">
+                            <span class="model-label">Static Model</span>
+                            <span class="model-value">{{ result.static_prediction }}</span>
+                            <span class="model-conf">
+                                HC: {{ (result.static_confidence.Healthy * 100)|round(1) }}%<br>
+                                SZ: {{ (result.static_confidence.Schizophrenia * 100)|round(1) }}%
+                            </span>
+                        </div>
+                        <div class="model-result">
+                            <span class="model-label">Dynamic Model</span>
+                            <span class="model-value">{{ result.dynamic_prediction }}</span>
+                            <span class="model-conf">
+                                HC: {{ (result.dynamic_confidence.Healthy * 100)|round(1) }}%<br>
+                                SZ: {{ (result.dynamic_confidence.Schizophrenia * 100)|round(1) }}%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Comparison Chart -->
+    <div class="result-section">
+        <h2>Static vs Dynamic Comparison</h2>
+        <div class="result-image">
+            <img src="data:image/png;base64,{{ result.images.comparison }}" alt="Static vs Dynamic Comparison">
+        </div>
+    </div>
+
+    <!-- Dynamic Connectivity Matrices -->
+    <div class="result-section">
+        <h2>Dynamic Functional Connectivity</h2>
+        <p class="caption">
+            <strong>⚠️ Important:</strong> These pseudo-dynamic windows are bootstrap simulations 
+            generated from a single static connectivity matrix, not measured BOLD time-series data.
+        </p>
+        <div class="result-image">
+            <img src="data:image/png;base64,{{ result.images.dynamic_connectivity }}" alt="Dynamic Functional Connectivity">
+        </div>
+    </div>
+
+    <!-- Temporal Attention -->
+    <div class="result-section">
+        <h2>Sliding Window Temporal Analysis</h2>
+        <p class="highlight">
+            Most attended window: <strong>Window {{ result.most_attended_window }}</strong>
+            (attention weight: {{ result.window_temporal_attention[result.most_attended_window - 1]|round(4) }})
+        </p>
+        <div class="result-image">
+            <img src="data:image/png;base64,{{ result.images.temporal_attention }}" alt="Temporal Attention">
+        </div>
+    </div>
+
+    <!-- ROI Attention - Dynamic -->
+    <div class="result-section">
+        <h2>Attention-Based Brain Region Identification</h2>
+        <div class="roi-grid">
+            <div>
+                <h3>Pseudo-Dynamic Model</h3>
+                <div class="result-image">
+                    <img src="data:image/png;base64,{{ result.images.top_rois_dynamic }}" alt="Dynamic Model ROI Attention">
+                </div>
+            </div>
+            <div>
+                <h3>Static Model</h3>
+                <div class="result-image">
+                    <img src="data:image/png;base64,{{ result.images.top_rois_static }}" alt="Static Model ROI Attention">
+                </div>
+            </div>
+        </div>
+        <p class="caption">
+            <strong>Note:</strong> ROI_&lt;index&gt; refers to node position in the connectivity matrix, 
+            not a named anatomical atlas region. Map these indices to real region names only if you know 
+            which atlas your original PNGs used.
+        </p>
+    </div>
+
+    <!-- Raw JSON -->
+    <div class="result-section">
+        <details class="json-details">
+            <summary>📄 View Raw JSON Results</summary>
+            <pre class="json-output">{{ result|tojson|safe }}</pre>
+        </details>
+    </div>
+
+    <div class="result-actions">
+        <a href="{{ url_for('predict_page') }}" class="btn btn-primary">Analyze Another Image</a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">View Dashboard</a>
+    </div>
+</div>
+{% endblock %}

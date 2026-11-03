@@ -1,0 +1,563 @@
+{% extends "base.html" %}
+
+{% block title %}About - Schizophrenia DFC Predictor{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-wrapper {
+        min-height: calc(100vh - 72px);
+        padding: 3rem 0;
+        background: linear-gradient(180deg, #0a0e1a 0%, #1a1a2e 50%, #16213e 100%);
+        margin-left: calc(-50vw + 50%);
+        margin-right: calc(-50vw + 50%);
+        width: 100vw;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .about-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 80%;
+        height: 80%;
+        background: radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+        animation: aboutShimmer 12s ease-in-out infinite;
+    }
+    
+    @keyframes aboutShimmer {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(-5%, 5%); }
+    }
+    
+    .about-container {
+        position: relative;
+        z-index: 1;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    
+    .about-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .about-header .about-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        padding: 0.4rem 1.2rem;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #93bbfc;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1rem;
+    }
+    
+    .about-header h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+    }
+    
+    .about-header h1 .highlight {
+        background: linear-gradient(135deg, #60a5fa, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .about-header p {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .about-section {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .about-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .about-section .section-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+    
+    .about-section .section-number {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.1);
+        padding: 0.1rem 0.6rem;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.05em;
+    }
+    
+    .about-section h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.3px;
+    }
+    
+    .about-section p, .about-section li {
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.8;
+    }
+    
+    .about-section strong {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .about-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0.75rem 0;
+    }
+    
+    .about-section ul li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    
+    .about-section ul li::before {
+        content: '▸';
+        position: absolute;
+        left: 0;
+        color: #60a5fa;
+        font-weight: 700;
+    }
+    
+    .about-section ul li:last-child {
+        border-bottom: none;
+    }
+    
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .tech-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: all 0.3s ease;
+    }
+    
+    .tech-item:hover {
+        background: rgba(59, 130, 246, 0.08);
+        border-color: rgba(59, 130, 246, 0.2);
+        transform: translateY(-2px);
+    }
+    
+    .tech-item .tech-icon {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+    
+    .tech-item .tech-name {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: block;
+    }
+    
+    .tech-item .tech-desc {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.7rem;
+        display: block;
+        margin-top: 0.1rem;
+    }
+    
+    .method-step {
+        background: rgba(255, 255, 255, 0.02);
+        border-left: 3px solid #3b82f6;
+        padding: 1rem 1.25rem;
+        margin: 0.75rem 0;
+        border-radius: 0 8px 8px 0;
+    }
+    
+    .method-step .step-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #60a5fa;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: block;
+        margin-bottom: 0.15rem;
+    }
+    
+    .method-step p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.7;
+    }
+    
+    .highlight-box {
+        background: rgba(251, 191, 36, 0.05);
+        border: 1px solid rgba(251, 191, 36, 0.1);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin: 0.75rem 0;
+    }
+    
+    .highlight-box .highlight-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #fbbf24;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+    
+    .highlight-box p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.7;
+    }
+    
+    .note-box {
+        background: rgba(59, 130, 246, 0.05);
+        border: 1px solid rgba(59, 130, 246, 0.1);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin: 0.75rem 0;
+    }
+    
+    .note-box .note-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #60a5fa;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+    
+    .note-box p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.7;
+    }
+    
+    .sub-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    
+    .sub-section h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 0.5rem;
+    }
+    
+    .sub-section p {
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.7;
+    }
+    
+    .tag {
+        display: inline-block;
+        padding: 0.1rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        margin: 0.1rem;
+    }
+    
+    .tag-blue {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+    }
+    
+    .tag-green {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+    }
+    
+    .tag-yellow {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+    }
+    
+    .tag-red {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+    }
+    
+    .tag-purple {
+        background: rgba(139, 92, 246, 0.15);
+        color: #a78bfa;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .about-container {
+            padding: 0 1rem;
+        }
+        
+        .about-header h1 {
+            font-size: 2.25rem;
+        }
+        
+        .about-section {
+            padding: 1.5rem;
+        }
+        
+        .tech-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .about-header h1 {
+            font-size: 1.75rem;
+        }
+        
+        .about-section {
+            padding: 1.25rem;
+        }
+        
+        .tech-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-wrapper">
+    <div class="about-container">
+        <!-- Header -->
+        <div class="about-header">
+            <div class="about-badge">📖 About This Project</div>
+            <h1>Schizophrenia <span class="highlight">DFC Predictor</span></h1>
+            <p>Dynamic Functional Connectivity analysis using Attention-Based Graph Neural Networks</p>
+        </div>
+
+        <!-- Technologies Used -->
+        <div class="about-section">
+            <div class="section-icon">🛠️</div>
+            <h2>Technologies Used</h2>
+            
+            <div class="sub-section">
+                <h3>🐍 Language &amp; Environment</h3>
+                <p><strong>Python 3.9</strong> — All code pinned to this version for compatibility</p>
+            </div>
+            
+            <div class="sub-section">
+                <h3>🧠 Deep Learning &amp; Graph Modeling</h3>
+                <ul>
+                    <li><strong>PyTorch</strong> — Core neural network framework (tensors, autograd, optimizers)</li>
+                    <li><strong>PyTorch Geometric (PyG)</strong> — Graph neural network library:
+                        <ul style="margin-top: 0.25rem; padding-left: 1.5rem;">
+                            <li><span class="tag tag-blue">GATv2Conv</span> — Graph Attention Network layers (the "spatial attention" mechanism)</li>
+                            <li><span class="tag tag-blue">Batch, Data</span> — Graph data structures for batching variable-sized graphs</li>
+                            <li><span class="tag tag-blue">global_mean_pool / global_max_pool</span> — Pooling node features into graph-level embeddings</li>
+                            <li><span class="tag tag-blue">nn.TransformerEncoder</span> — PyTorch built-in sequence/temporal attention mechanism across pseudo-windows</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sub-section">
+                <h3>📊 Data Handling &amp; Image Processing</h3>
+                <ul>
+                    <li><span class="tag tag-green">NumPy</span> — Matrix operations (correlation matrices, bootstrap noise, symmetrization)</li>
+                    <li><span class="tag tag-green">Pillow (PIL)</span> — Loading and resizing connectivity-matrix images</li>
+                    <li><span class="tag tag-green">Matplotlib</span> — Colormap inversion (recovering numeric values from heatmap pixel colors) and all plotting</li>
+                </ul>
+            </div>
+            
+            <div class="sub-section">
+                <h3>📈 Evaluation &amp; Metrics</h3>
+                <ul>
+                    <li><span class="tag tag-yellow">scikit-learn</span> — Stratified train/val split, accuracy/precision/recall/F1/AUC, confusion matrix, classification reports</li>
+                </ul>
+            </div>
+            
+            <div class="sub-section">
+                <h3>📉 Visualization</h3>
+                <ul>
+                    <li><span class="tag tag-purple">Matplotlib + Seaborn</span> — Training curves, confusion matrix heatmaps, attention bar charts, comparison charts</li>
+                </ul>
+            </div>
+            
+            <div class="sub-section">
+                <h3>📄 Output/Interchange Formats</h3>
+                <ul>
+                    <li><span class="tag tag-blue">Pandas</span> — CSV export of per-subject predictions</li>
+                    <li><span class="tag tag-yellow">JSON</span> — Model config persistence and the machine-readable prediction summary</li>
+                </ul>
+            </div>
+            
+            <div class="sub-section">
+                <h3>📝 Reporting/Deliverables</h3>
+                <ul>
+                    <li><span class="tag tag-red">docx</span> — Generated Word report (via Node.js)</li>
+                    <li><span class="tag tag-green">Flask</span> — Web UI wrapping the pipeline</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Methodology -->
+        <div class="about-section">
+            <div class="section-icon">🔬</div>
+            <h2>Methodology</h2>
+            
+            <!-- Step 1 -->
+            <div class="method-step">
+                <span class="step-label">Step 1 — Image-to-Signal Conversion</span>
+                <p>
+                    Each subject's connectivity-matrix PNG is resized to a fixed ROI×ROI grid. Since the image is a rendered heatmap rather than raw numbers, pixel colors are matched against a colormap lookup table (nearest-color search) to recover approximate correlation values in [-1, 1] — with a grayscale-intensity fallback if the image isn't clearly colormap-encoded.
+                </p>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="method-step">
+                <span class="step-label">Step 2 — Pseudo-Dynamic Window Generation</span>
+                <div class="highlight-box">
+                    <span class="highlight-label">⚠️ Core Methodological Workaround</span>
+                    <p>
+                        Since the dataset has no real time-series, "dynamic" connectivity is approximated: each subject's static matrix is perturbed <strong>N=15</strong> times using reproducible edge-wise Gaussian bootstrap resampling — noise proportional to each edge's strength, symmetrized, clipped back into a valid range. This gives the model a sequence to reason over, standing in for genuine sliding-window analysis. <strong>This is explicitly flagged everywhere as an approximation, not measured brain activity.</strong>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="method-step">
+                <span class="step-label">Step 3 — Graph Construction</span>
+                <p>
+                    Every connectivity matrix (static, or each pseudo-window) becomes a graph: <strong>nodes = brain ROIs</strong> (feature = that ROI's full connectivity row), <strong>edges = top-10 strongest connections per node</strong>, edge weight = the connectivity value. This is the standard way to make a GNN applicable to connectivity data.
+                </p>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="method-step">
+                <span class="step-label">Step 4 — Attention-Based GNN Architecture</span>
+                <p>Two-level attention, matching the project brief:</p>
+                <ul>
+                    <li><strong>Spatial attention (GATv2Conv):</strong> Learns which ROI-to-ROI connections matter within each window/graph</li>
+                    <li><strong>Sequence attention (Transformer encoder):</strong> Learns which of the N pseudo-windows carry the most discriminative signal, combining them into one subject-level representation</li>
+                </ul>
+                <div class="note-box" style="margin-top: 0.75rem;">
+                    <span class="note-label">💡 Static Baseline</span>
+                    <p>
+                        A static baseline model uses the identical spatial-attention block but skips the sequence-attention stage entirely — this isolates whether the windowed/temporal component actually helps, versus just being architectural complexity.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="method-step">
+                <span class="step-label">Step 5 — Training Methodology</span>
+                <ul>
+                    <li>Stratified train/validation split (class ratio preserved), test set fully held out</li>
+                    <li><strong>Class-weighted Cross-Entropy Loss</strong> — Handles class imbalance</li>
+                    <li><strong>AdamW optimizer + ReduceLROnPlateau scheduler + early stopping</strong> on validation F1</li>
+                    <li><strong>Best-checkpoint selection</strong> (not last-epoch) based on validation F1</li>
+                </ul>
+            </div>
+            
+            <!-- Step 6 -->
+            <div class="method-step">
+                <span class="step-label">Step 6 — Explainability Methodology</span>
+                <p>Rather than treating the GNN as a black box, we extract the model's actual internal attention weights:</p>
+                <ul>
+                    <li><strong>GAT edge-attention</strong> weights aggregated per node → identifies which brain regions the model focused on</li>
+                    <li><strong>Transformer self-attention</strong> weights, manually replayed since PyTorch doesn't expose them by default → identifies which pseudo-window the model relied on most</li>
+                </ul>
+            </div>
+            
+            <!-- Step 7 -->
+            <div class="method-step">
+                <span class="step-label">Step 7 — Comparative Evaluation Methodology</span>
+                <div class="note-box">
+                    <span class="note-label">📊 Key Approach</span>
+                    <p>
+                        Every stage (training, testing, single-image prediction) reports the <strong>static</strong> and <strong>pseudo-dynamic</strong> models <strong>side by side</strong>, directly addressing the project's stated goal of comparing dynamic vs static connectivity methods, rather than reporting the dynamic model in isolation.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Architecture Overview -->
+        <div class="about-section">
+            <div class="section-icon">🏗️</div>
+            <h2>Model Architecture Overview</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 0.75rem;">
+                <div style="background: rgba(255,255,255,0.02); border-radius: 12px; padding: 1.25rem; border: 1px solid rgba(255,255,255,0.04);">
+                    <h3 style="color: #60a5fa; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem;">Dynamic Model</h3>
+                    <ul style="font-size: 0.85rem;">
+                        <li><strong>Input:</strong> N=15 pseudo-window graphs</li>
+                        <li><strong>Spatial Encoder:</strong> GATv2Conv (2 layers)</li>
+                        <li><strong>Sequence Encoder:</strong> Transformer (self-attention)</li>
+                        <li><strong>Output:</strong> Subject-level classification</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255,255,255,0.02); border-radius: 12px; padding: 1.25rem; border: 1px solid rgba(255,255,255,0.04);">
+                    <h3 style="color: #fbbf24; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem;">Static Model</h3>
+                    <ul style="font-size: 0.85rem;">
+                        <li><strong>Input:</strong> Single static graph</li>
+                        <li><strong>Spatial Encoder:</strong> GATv2Conv (2 layers)</li>
+                        <li><strong>Sequence Encoder:</strong> <span style="color: rgba(255,255,255,0.4);">(skipped)</span></li>
+                        <li><strong>Output:</strong> Subject-level classification</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1rem; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,0.4);">
+                Both models use the same spatial attention backbone and classifier head
+            </div>
+        </div>
+
+        <!-- Key Features Summary -->
+        <div class="about-section">
+            <div class="section-icon">✨</div>
+            <h2>Key Features</h2>
+            <ul>
+                <li><strong>Dual Model Analysis:</strong> Static and pseudo-dynamic connectivity models for robust prediction</li>
+                <li><strong>Attention Visualization:</strong> Understand which brain regions and time windows influenced the prediction</li>
+                <li><strong>Comprehensive Results:</strong> Detailed visualizations including DFC matrices, temporal attention, and ROI importance</li>
+                <li><strong>User Dashboard:</strong> Store and review all past predictions with history tracking</li>
+                <li><strong>Explainable AI:</strong> Transparent predictions with attention-based explanations</li>
+                <li><strong>Web Interface:</strong> Flask-based UI for easy image upload and result visualization</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,634 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Schizophrenia DFC Predictor{% endblock %}
+
+{% block content %}
+<div class="hero-wrapper">
+    <!-- Background Slideshow -->
+    <div class="slideshow-container">
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1920&q=80');">
+            <div class="slide-overlay"></div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1559757175-7b8b15e6b1b3?w=1920&q=80');">
+            <div class="slide-overlay"></div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1579684385126-14a47d0b3a5b?w=1920&q=80');">
+            <div class="slide-overlay"></div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1920&q=80');">
+            <div class="slide-overlay"></div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1920&q=80');">
+            <div class="slide-overlay"></div>
+        </div>
+    </div>
+    
+    <div class="hero-content-wrapper">
+        <div class="hero-glass-card">
+            <div class="hero-badge">
+                <span class="badge-pulse"></span>
+                AI-Powered Diagnosis
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="title-gradient">Schizophrenia</span>
+                <span class="title-sub">DFC Prediction</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Dynamic Functional Connectivity analysis using 
+                <span class="highlight-text">Attention-Based GNN</span>
+            </p>
+            
+            <div class="hero-features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <span class="feature-label">Dual Model</span>
+                        <span class="feature-desc">Static &amp; Dynamic Analysis</span>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v8M8 12h8"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <span class="feature-label">Attention Viz</span>
+                        <span class="feature-desc">Explainable AI Insights</span>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <span class="feature-label">Comprehensive</span>
+                        <span class="feature-desc">Detailed Results &amp; Visuals</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-actions">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('predict_page') }}" class="btn btn-primary btn-large btn-glow">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Start Prediction
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-large">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-large btn-glow">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+                        </svg>
+                        Login to Start
+                    </a>
+                    <a href="{{ url_for('register') }}" class="btn btn-secondary btn-large">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3M4 5v14a2 2 0 002 2h12a2 2 0 002-2V7l-4-4H6a2 2 0 00-2 2z"/>
+                        </svg>
+                        Create Account
+                    </a>
+                {% endif %}
+            </div>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-accuracy">95.2%</span>
+                    <span class="stat-label">Model Accuracy</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-windows">15</span>
+                    <span class="stat-label">Time Windows</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-rois">116</span>
+                    <span class="stat-label">Brain Regions</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Wrapper */
+    .hero-wrapper {
+        position: relative;
+        width: 100vw;
+        min-height: calc(100vh - 72px);
+        margin-left: calc(-50vw + 50%);
+        margin-right: calc(-50vw + 50%);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0a0e1a;
+    }
+
+    /* Slideshow */
+    .slideshow-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        animation: slideAnimation 20s infinite;
+        transform: scale(1.1);
+        transition: transform 8s ease-in-out;
+    }
+
+    .slide:nth-child(1) { animation-delay: 0s; }
+    .slide:nth-child(2) { animation-delay: 4s; }
+    .slide:nth-child(3) { animation-delay: 8s; }
+    .slide:nth-child(4) { animation-delay: 12s; }
+    .slide:nth-child(5) { animation-delay: 16s; }
+
+    @keyframes slideAnimation {
+        0%, 15% {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        20%, 100% {
+            opacity: 0;
+            transform: scale(1.3);
+        }
+    }
+
+    .slide-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, 
+            rgba(10, 14, 26, 0.85) 0%,
+            rgba(15, 23, 42, 0.7) 40%,
+            rgba(30, 58, 138, 0.5) 100%
+        );
+    }
+
+    /* Hero Content */
+    .hero-content-wrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 1200px;
+        padding: 2rem;
+    }
+
+    .hero-glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 32px;
+        padding: 3.5rem 4rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        animation: fadeInUp 0.8s ease-out;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-glass-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 50%, 
+            rgba(59, 130, 246, 0.05) 0%,
+            transparent 70%
+        );
+        animation: shimmer 8s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(10%, 5%); }
+    }
+
+    /* Badge */
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        padding: 0.4rem 1.2rem;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #93bbfc;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 1.5rem;
+    }
+
+    .badge-pulse {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3b82f6;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* Title */
+    .hero-title {
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 0.75rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .title-gradient {
+        display: block;
+        background: linear-gradient(135deg, #60a5fa, #3b82f6, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .title-sub {
+        display: block;
+        color: rgba(255, 255, 255, 0.9);
+        -webkit-text-fill-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-subtitle {
+        font-size: 1.15rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 2.5rem;
+        position: relative;
+        z-index: 1;
+        line-height: 1.6;
+    }
+
+    .highlight-text {
+        color: #60a5fa;
+        font-weight: 600;
+        -webkit-text-fill-color: #60a5fa;
+    }
+
+    /* Features Grid */
+    .hero-features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-2px);
+        border-color: rgba(59, 130, 246, 0.3);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.1);
+    }
+
+    .feature-icon-wrapper {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(59, 130, 246, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .feature-icon {
+        width: 20px;
+        height: 20px;
+        color: #60a5fa;
+    }
+
+    .feature-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feature-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .feature-desc {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Buttons */
+    .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 2.5rem;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.75rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-icon {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2.5;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        color: white;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-glow {
+        animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+        0%, 100% { box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        50% { box-shadow: 0 4px 30px rgba(59, 130, 246, 0.6); }
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-large {
+        padding: 0.875rem 2.25rem;
+        font-size: 1rem;
+    }
+
+    /* Stats */
+    .hero-stats {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #60a5fa, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 0.1rem;
+    }
+
+    .stat-divider {
+        width: 1px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .hero-glass-card {
+            padding: 2.5rem 2rem;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+        }
+        
+        .hero-features-grid {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-wrapper {
+            min-height: calc(100vh - 64px);
+        }
+        
+        .hero-glass-card {
+            padding: 2rem 1.5rem;
+            border-radius: 24px;
+        }
+        
+        .hero-title {
+            font-size: 2.25rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        
+        .hero-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .btn {
+            justify-content: center;
+        }
+        
+        .hero-stats {
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+        
+        .stat-divider {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero-glass-card {
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+        }
+        
+        .hero-title {
+            font-size: 1.75rem;
+        }
+        
+        .hero-badge {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.8rem;
+        }
+        
+        .stat-number {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Dynamic counter animation for stats
+    document.addEventListener('DOMContentLoaded', function() {
+        const statNumbers = document.querySelectorAll('.stat-number');
+        
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumber(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        statNumbers.forEach(stat => observer.observe(stat));
+        
+        function animateNumber(element) {
+            const text = element.textContent;
+            const numericValue = parseFloat(text);
+            
+            if (isNaN(numericValue)) return;
+            
+            const duration = 2000;
+            const startTime = performance.now();
+            const startValue = 0;
+            
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Ease out cubic
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const currentValue = startValue + (numericValue - startValue) * eased;
+                
+                if (text.includes('.')) {
+                    element.textContent = currentValue.toFixed(1) + '%';
+                } else {
+                    element.textContent = Math.round(currentValue);
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = text;
+                }
+            }
+            
+            requestAnimationFrame(updateCounter);
+        }
+    });
+</script>
+{% endblock %}

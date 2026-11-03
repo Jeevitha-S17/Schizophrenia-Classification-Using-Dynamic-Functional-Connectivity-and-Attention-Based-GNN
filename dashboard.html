@@ -1,0 +1,603 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Schizophrenia DFC Predictor{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-wrapper {
+        min-height: calc(100vh - 72px);
+        padding: 2rem 0;
+        background: linear-gradient(180deg, #0a0e1a 0%, #1a1a2e 50%, #16213e 100%);
+        margin-left: calc(-50vw + 50%);
+        margin-right: calc(-50vw + 50%);
+        width: 100vw;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .dashboard-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 80%;
+        height: 80%;
+        background: radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+        animation: dashboardShimmer 12s ease-in-out infinite;
+    }
+    
+    @keyframes dashboardShimmer {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(-5%, 5%); }
+    }
+    
+    .dashboard-container {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
+    
+    .dashboard-header h1 .header-icon {
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
+    
+    .dashboard-stats {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 0.5rem 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    
+    .stat-chip {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .stat-chip .stat-number {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #60a5fa;
+    }
+    
+    .stat-chip .stat-label {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .stat-divider-dash {
+        width: 1px;
+        height: 30px;
+        background: rgba(255, 255, 255, 0.06);
+    }
+    
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        color: white;
+        padding: 0.625rem 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-primary .btn-icon {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2.5;
+    }
+    
+    .btn-small {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        border-radius: 8px;
+    }
+    
+    /* Table Styles - Fixed */
+    .table-responsive {
+        overflow-x: auto;
+        border-radius: 16px;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+    
+    .predictions-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+        background: transparent;
+    }
+    
+    .predictions-table thead {
+        background: rgba(30, 58, 138, 0.15);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    
+    .predictions-table th {
+        padding: 1rem 1.25rem;
+        text-align: left;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.5);
+        white-space: nowrap;
+    }
+    
+    .predictions-table td {
+        padding: 0.875rem 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.85);
+        vertical-align: middle;
+        background: transparent;
+    }
+    
+    .predictions-table tbody tr {
+        transition: all 0.2s ease;
+        background: transparent;
+    }
+    
+    .predictions-table tbody tr:hover {
+        background: rgba(59, 130, 246, 0.05);
+    }
+    
+    .predictions-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .prediction-badge {
+        display: inline-block;
+        padding: 0.2rem 0.7rem;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    
+    .prediction-badge.healthy {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.15);
+    }
+    
+    .prediction-badge.schizophrenia {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.15);
+    }
+    
+    .confidence {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin-left: 0.35rem;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.2rem 0.7rem;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    .status-badge.agree {
+        background: rgba(34, 197, 94, 0.1);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.1);
+    }
+    
+    .status-badge.disagree {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fbbf24;
+        border: 1px solid rgba(251, 191, 36, 0.1);
+    }
+    
+    .window-badge {
+        display: inline-block;
+        padding: 0.15rem 0.6rem;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.1);
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .action-buttons form {
+        display: inline;
+        margin: 0;
+    }
+    
+    .action-buttons .btn {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.7rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-weight: 500;
+        font-family: inherit;
+    }
+    
+    .action-buttons .btn-view {
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.1);
+    }
+    
+    .action-buttons .btn-view:hover {
+        background: rgba(59, 130, 246, 0.2);
+        transform: translateY(-1px);
+    }
+    
+    .action-buttons .btn-delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.1);
+    }
+    
+    .action-buttons .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.2);
+        transform: translateY(-1px);
+    }
+    
+    /* Pagination */
+    .pagination {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .page-link {
+        padding: 0.4rem 0.9rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        background: rgba(255, 255, 255, 0.03);
+    }
+    
+    .page-link:hover {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.2);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+    
+    .page-link.active {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        color: white;
+        border-color: #3b82f6;
+    }
+    
+    .page-ellipsis {
+        padding: 0.4rem 0.5rem;
+        color: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    
+    .empty-state .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    .empty-state p {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .dashboard-container {
+            padding: 0 1rem;
+        }
+        
+        .dashboard-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 1.75rem;
+            text-align: center;
+        }
+        
+        .dashboard-stats {
+            justify-content: center;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .dashboard-wrapper {
+            padding: 1rem 0;
+        }
+        
+        .predictions-table {
+            min-width: 700px;
+        }
+        
+        .dashboard-stats {
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        .stat-chip .stat-number {
+            font-size: 0.9rem;
+        }
+        
+        .stat-divider-dash {
+            height: 20px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .dashboard-header h1 {
+            font-size: 1.5rem;
+        }
+        
+        .dashboard-stats {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .stat-divider-dash {
+            display: none;
+        }
+        
+        .predictions-table {
+            min-width: 600px;
+        }
+        
+        .predictions-table th,
+        .predictions-table td {
+            padding: 0.625rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        
+        .action-buttons .btn {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>
+                <span class="header-icon">📊</span>
+                My Predictions
+            </h1>
+            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+               <div class="dashboard-stats">
+
+                    <!-- Total -->
+                    <div class="stat-chip">
+                        <span class="stat-number">
+                            {{ predictions.total if predictions else 0 }}
+                        </span>
+                        <span class="stat-label">Total</span>
+                    </div>
+
+                    <div class="stat-divider-dash"></div>
+
+                    <!-- Healthy -->
+                    <div class="stat-chip">
+                        <span class="stat-number" style="color: #4ade80;">
+                            {% if predictions and predictions.items %}
+                                {{ predictions.items
+                                    | selectattr('static_prediction', 'equalto', 'Healthy')
+                                    | list
+                                    | length }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </span>
+                        <span class="stat-label">Healthy</span>
+                    </div>
+
+                    <div class="stat-divider-dash"></div>
+
+                    <!-- Schizophrenia -->
+                    <div class="stat-chip">
+                        <span class="stat-number" style="color: #f87171;">
+                            {% if predictions and predictions.items %}
+                                {{ predictions.items
+                                    | selectattr('static_prediction', 'equalto', 'Schizophrenia')
+                                    | list
+                                    | length }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </span>
+                        <span class="stat-label">Schizophrenia</span>
+                    </div>
+
+                </div>
+                <a href="{{ url_for('predict_page') }}" class="btn-primary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    New Prediction
+                </a>
+            </div>
+        </div>
+
+        {% if predictions.items %}
+            <div class="table-responsive">
+                <table class="predictions-table">
+                    <thead>
+                        <tr>
+                            <th style="color: #0a0e1a;">ID</th>
+                            <th style="color: #0a0e1a;">Image</th>
+                            <th style="color: #0a0e1a;">Date</th>
+                            <th style="color: #0a0e1a;">Static</th>
+                            <th style="color: #0a0e1a;">Dynamic</th>
+                            <th style="color: #0a0e1a;">Agreement</th>
+                            <th style="color: #0a0e1a;">Most Attended</th>
+                            <th style="color: #0a0e1a;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pred in predictions.items %}
+                        <tr>
+                            <td style="font-weight: 600; color: rgba(255,255,255,0.5);">#{{ pred.id }}</td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: rgba(255,255,255,0.7);" title="{{ pred.image_filename }}">
+                                {{ pred.image_filename }}
+                            </td>
+                            <td style="color: rgba(255,255,255,0.6);">{{ pred.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <span class="prediction-badge {{ pred.static_prediction|lower }}">
+                                    {{ pred.static_prediction }}
+                                </span>
+                                <span class="confidence">
+                                    {{ (pred.static_hc_confidence * 100)|round(1) if pred.static_prediction == 'Healthy' 
+                                       else (pred.static_sz_confidence * 100)|round(1) }}%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="prediction-badge {{ pred.dynamic_prediction|lower }}">
+                                    {{ pred.dynamic_prediction }}
+                                </span>
+                                <span class="confidence">
+                                    {{ (pred.dynamic_hc_confidence * 100)|round(1) if pred.dynamic_prediction == 'Healthy' 
+                                       else (pred.dynamic_sz_confidence * 100)|round(1) }}%
+                                </span>
+                            </td>
+                            <td>
+                                {% if pred.models_agree %}
+                                    <span class="status-badge agree">✅ Agree</span>
+                                {% else %}
+                                    <span class="status-badge disagree">⚠️ Disagree</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="window-badge">Window {{ pred.most_attended_window }}</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('view_prediction', prediction_id=pred.id) }}" class="btn btn-view">
+                                        👁️ View
+                                    </a>
+                                    <form method="POST" action="{{ url_for('delete_prediction', prediction_id=pred.id) }}" 
+                                          onsubmit="return confirm('Delete this prediction? This action cannot be undone.')">
+                                        <button type="submit" class="btn btn-delete">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if predictions.pages > 1 %}
+            <div class="pagination">
+                {% for page in predictions.iter_pages() %}
+                    {% if page %}
+                        <a href="{{ url_for('dashboard', page=page) }}" 
+                           class="page-link {% if page == predictions.page %}active{% endif %}">
+                            {{ page }}
+                        </a>
+                    {% else %}
+                        <span class="page-ellipsis">…</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">📭</span>
+                <p>You haven't made any predictions yet.</p>
+                <a href="{{ url_for('predict_page') }}" class="btn-primary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Make Your First Prediction
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

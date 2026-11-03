@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Predict - Schizophrenia DFC Predictor{% endblock %}
+
+{% block content %}
+<div class="predict-container">
+    <h1>Upload Image for Prediction</h1>
+    <p class="predict-subtitle">
+        Upload a connectivity matrix image (PNG or JPG) for schizophrenia classification
+    </p>
+    
+    <div class="upload-card">
+        <form id="predict-form" method="POST" action="{{ url_for('predict') }}" enctype="multipart/form-data">
+            <div class="upload-area" id="drop-zone">
+                <div class="upload-icon">📤</div>
+                <p>Drag & drop your image here, or click to browse</p>
+                <p class="upload-hint">Supports PNG, JPG, JPEG</p>
+                <input type="file" id="image-input" name="image" accept=".png,.jpg,.jpeg" required>
+                <div id="file-info" class="file-info" style="display:none">
+                    <span id="file-name"></span>
+                    <span id="file-size"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large btn-block" id="predict-btn">Analyze Image</button>
+        </form>
+    </div>
+
+    <div id="loading" style="display:none" class="loading-container">
+        <div class="spinner"></div>
+        <p>Analyzing connectivity patterns...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('image-input');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const predictBtn = document.getElementById('predict-btn');
+    const loading = document.getElementById('loading');
+
+    // Click to browse
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Drag and drop
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            updateFileInfo(fileInput.files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', function() {
+        if (this.files.length) {
+            updateFileInfo(this.files[0]);
+        }
+    });
+
+    function updateFileInfo(file) {
+        fileInfo.style.display = 'block';
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / 1024).toFixed(1) + ' KB';
+        dropZone.classList.add('has-file');
+    }
+
+    // Show loading on submit
+    document.getElementById('predict-form').addEventListener('submit', function(e) {
+        if (!fileInput.files.length) {
+            e.preventDefault();
+            alert('Please select an image to analyze.');
+            return;
+        }
+        loading.style.display = 'block';
+        predictBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}
