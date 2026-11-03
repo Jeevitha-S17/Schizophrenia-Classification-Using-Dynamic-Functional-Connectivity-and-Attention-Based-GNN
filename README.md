@@ -1,0 +1,1 @@
+# Schizophrenia-Classification-Using-Dynamic-Functional-Connectivity-and-Attention-Based-GNN
